@@ -5,9 +5,300 @@
   --color-asphalt: #111111;
   --color-concrete: #2b2c2e;
   --color-cone: #f97316;
+  --color-ink: #0a0a0a;
   --font-stencil: var(--font-black-ops);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
+
+/* ============================================================
+   Portfolio
+   ============================================================ */
+
+html {
+  background-color: #0a0a0a;
+  color-scheme: dark;
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
+}
+
+::selection {
+  background: rgb(74 222 128 / 0.25);
+}
+
+:focus-visible {
+  outline: 2px solid #e5e5e5;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@layer components {
+  .section {
+    padding-block: 3.5rem;
+  }
+
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 60;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    background: #fafafa;
+    color: #0a0a0a;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    transform: translateY(-200%);
+  }
+  .skip-link:focus {
+    transform: none;
+  }
+
+  /* Titre « [ Section ] » : deux crochets dessinés en CSS */
+  .bracket-title {
+    position: relative;
+    display: inline-block;
+    padding: 0.2rem 0.9rem;
+  }
+  .bracket-title::before,
+  .bracket-title::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0.45rem;
+    border: 1.5px solid #525252;
+  }
+  .bracket-title::before {
+    left: 0;
+    border-right: 0;
+  }
+  .bracket-title::after {
+    right: 0;
+    border-left: 0;
+  }
+
+  .card {
+    border: 1px dashed #262626;
+    border-radius: 0.875rem;
+    background: rgb(23 23 23 / 0.35);
+  }
+  .card-hover {
+    transition:
+      border-color 0.25s ease,
+      background-color 0.25s ease,
+      transform 0.25s ease,
+      opacity 0.6s ease;
+  }
+  .card-hover:hover {
+    border-color: #404040;
+    background: rgb(23 23 23 / 0.7);
+    transform: translateY(-2px);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.1rem 0.5rem;
+    border: 1px solid #262626;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.25rem;
+    color: #a3a3a3;
+    background: #111;
+  }
+  .badge-green {
+    color: #86efac;
+    border-color: rgb(74 222 128 / 0.3);
+    background: rgb(74 222 128 / 0.08);
+  }
+  .badge-green::before {
+    content: "";
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 999px;
+    background: #4ade80;
+  }
+  .badge-amber {
+    color: #fcd34d;
+    border-color: rgb(252 211 77 / 0.3);
+    background: rgb(252 211 77 / 0.08);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.55rem 1rem;
+    border: 1px dashed #404040;
+    border-radius: 0.625rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: #e5e5e5;
+    background: #111;
+    cursor: pointer;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+  .btn:hover {
+    border-color: #737373;
+    background: #1a1a1a;
+    color: #fff;
+  }
+  .btn-sm {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
+  }
+  .btn-primary {
+    border-style: solid;
+    border-color: #fafafa;
+    background: #fafafa;
+    color: #0a0a0a;
+  }
+  .btn-primary:hover {
+    border-color: #d4d4d4;
+    background: #d4d4d4;
+    color: #0a0a0a;
+  }
+
+  /* Visuel de remplacement des projets */
+  .dot-grid {
+    background-image: radial-gradient(#262626 1px, transparent 1px);
+    background-size: 12px 12px;
+  }
+
+  /* Accordéon : animation de hauteur via grid-template-rows */
+  .accordion-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
+  }
+  .accordion-panel[data-open] {
+    grid-template-rows: 1fr;
+  }
+}
+
+/* Compétences : défilement en boucle, pause au survol */
+.marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+.marquee-reverse {
+  animation-direction: reverse;
+}
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Apparition au scroll (uniquement si JS actif, cf. layout) */
+[data-js] [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+[data-js] [data-reveal][data-visible] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Intro : mots qui défilent en fondu, puis l'écran glisse vers le haut (≈2,5 s) */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: #0a0a0a;
+  animation: intro-out 0.7s cubic-bezier(0.76, 0, 0.24, 1) 1.8s forwards;
+}
+.intro-word {
+  grid-area: 1 / 1;
+  font-family: var(--font-sans);
+  font-size: clamp(2rem, 6vw, 3.25rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #fafafa;
+  opacity: 0;
+  animation: intro-word 0.3s ease both;
+  animation-delay: calc(var(--i) * 0.3s);
+}
+.intro-word[data-last] {
+  animation-name: intro-word-last;
+  animation-fill-mode: both;
+}
+@keyframes intro-word {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  30%,
+  70% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+@keyframes intro-word-last {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes intro-out {
+  to {
+    transform: translateY(-100%);
+    visibility: hidden;
+  }
+}
+[data-intro="skip"] .intro {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro {
+    display: none;
+  }
+  [data-js] [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+  /* Compétences : défilement manuel à la place de l'animation */
+  .marquee {
+    overflow-x: auto;
+    mask-image: none;
+  }
+  .marquee-track > [aria-hidden="true"] {
+    display: none;
+  }
+}
+
+/* ============================================================
+   Page « en construction » (/construction)
+   ============================================================ */
 
 /* Fond béton : anthracite + mouchetis léger */
 .concrete {
