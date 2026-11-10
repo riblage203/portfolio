@@ -1,26 +1,119 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-hazard: #facc15;
+  --color-asphalt: #111111;
+  --color-concrete: #2b2c2e;
+  --color-cone: #f97316;
+  --font-stencil: var(--font-black-ops);
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Fond béton : anthracite + mouchetis léger */
+.concrete {
+  background-color: #2b2c2e;
+  background-image:
+    radial-gradient(rgb(255 255 255 / 0.035) 1px, transparent 1.5px),
+    radial-gradient(rgb(0 0 0 / 0.28) 1px, transparent 1.5px),
+    radial-gradient(ellipse at 20% 10%, rgb(255 255 255 / 0.05), transparent 60%),
+    radial-gradient(ellipse at 80% 90%, rgb(0 0 0 / 0.35), transparent 60%);
+  background-size: 7px 7px, 11px 11px, 100% 100%, 100% 100%;
+  background-position: 0 0, 3px 5px, 0 0, 0 0;
+}
+
+/* Bandes de signalisation */
+.hazard-stripes {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--color-hazard) 0 22px,
+    var(--color-asphalt) 22px 44px
+  );
+}
+
+/* Barre de progression rayée animée */
+.progress-stripes {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--color-hazard) 0 12px,
+    var(--color-asphalt) 12px 24px
+  );
+  background-size: 34px 34px;
+  animation: stripes-move 1s linear infinite;
+}
+@keyframes stripes-move {
+  to {
+    background-position: 34px 0;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Rubalise : texte qui défile */
+.tape-track {
+  animation: tape-scroll 28s linear infinite;
+}
+@keyframes tape-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Gyrophare */
+.beacon-light {
+  animation: beacon-pulse 1.6s ease-in-out infinite;
+}
+@keyframes beacon-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    filter: drop-shadow(0 0 2px #f97316);
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 14px #fb923c);
+  }
+}
+
+/* Cône qui tombe, roule hors de l'écran, puis retombe à sa place */
+.cone-rolling {
+  animation: cone-roll 3.2s ease-in-out forwards;
+}
+@keyframes cone-roll {
+  0% {
+    transform: none;
+  }
+  12% {
+    transform: rotate(calc(var(--dir) * 90deg));
+  }
+  55% {
+    transform: translateX(calc(var(--dir) * 110vw)) rotate(calc(var(--dir) * 900deg));
+    opacity: 1;
+  }
+  56% {
+    transform: translateY(-110vh);
+    opacity: 0;
+  }
+  57% {
+    opacity: 1;
+  }
+  85% {
+    transform: translateY(0);
+  }
+  92% {
+    transform: translateY(-14px);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .beacon-light {
+    opacity: 1;
+  }
 }
